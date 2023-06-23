@@ -1,26 +1,30 @@
+import 'package:Cadernetadofiado/util/caderneta.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import '../data/database.dart';
 import '../util/dialog_box.dart';
-import '../util/caderneta.dart';
+
+
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
-  _HomePageState createState() => _HomePageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+  
   final _myBox = Hive.box('mybox');
   CadernetafiadoDataBase db = CadernetafiadoDataBase();
 
   @override
   void initState() {
-    if (_myBox.get("Caderneta do Fiado") == null) {
+
+    if (_myBox.get("TODOLIST") == null) {
       db.createInitialData();
     } else {
+
       db.loadData();
     }
 
@@ -68,66 +72,25 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          Image.asset(
-            'assets/nome_da_imagem.jpg',
-            fit: BoxFit.cover,
-            width: double.infinity,
-            height: double.infinity,
-          ),
-          Scaffold(
-            backgroundColor: Colors.transparent,
-            appBar: AppBar(
-              title: Text('Caderneta do Fiado Diária'),
-              elevation: 0,
-            ),
-            floatingActionButton: FloatingActionButton(
-              onPressed: createNewTask,
-              child: Icon(Icons.add),
-            ),
-            body: ListView.builder(
-              itemCount: db.CadernetafiadoList.length,
-              itemBuilder: (context, index) {
-                return CadernetafiadoTile(
-                  taskName: db.CadernetafiadoList[index][0],
-                  taskCompleted: db.CadernetafiadoList[index][1],
-                  onChanged: (value) => checkBoxChanged(value, index),
-                  deleteFunction: (context) => deleteTask(index),
-                );
-              },
-            ),
-          ),
-        ],
+      backgroundColor: Colors.yellow[200],
+      appBar: AppBar(
+        title: Text('Caderneta do fiado'),
+        elevation: 0,
       ),
-    );
-  }
-}
-
-class CadernetafiadoTile extends StatelessWidget {
-  final String taskName;
-  final bool taskCompleted;
-  final Function(bool?) onChanged;
-  final Function(BuildContext) deleteFunction;
-
-  const CadernetafiadoTile({
-    required this.taskName,
-    required this.taskCompleted,
-    required this.onChanged,
-    required this.deleteFunction,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(taskName),
-      leading: Checkbox(
-        value: taskCompleted,
-        onChanged: onChanged,
+      floatingActionButton: FloatingActionButton(
+        onPressed: createNewTask,
+        child: Icon(Icons.add),
       ),
-      trailing: IconButton(
-        icon: Icon(Icons.delete),
-        onPressed: () => deleteFunction(context),
+      body: ListView.builder(
+        itemCount: db.CadernetafiadoList.length,
+        itemBuilder: (context, index) {
+          return CadernetafiadoTile(
+            taskName: db.CadernetafiadoList[index][0],
+            taskCompleted: db.CadernetafiadoList[index][1],
+            onChanged: (value) => checkBoxChanged(value, index),
+            deleteFunction: (context) => deleteTask(index),
+          );
+        },
       ),
     );
   }
