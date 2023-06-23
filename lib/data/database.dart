@@ -9,6 +9,7 @@ class CadernetafiadoDataBase {
     CadernetafiadoList = [
       ["Tessele: DEVE UMA PIZZA", true],
       ["Elisson: DEVE OUTRA PIZZA", false],
+      ["Se arrastar pra esquerda ele abre o delete ;)", false],
     ];
   }
 
